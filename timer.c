@@ -1,5 +1,6 @@
-#include "timer.h"
 #include <avr/io.h>
+#include "timer.h"
+#include "util.h"
 
 // "ticks" is the number of clock cycles we want our timer to last
 // Returns whether we could find a suitable Target (whether "ticks" fits in the timer)
@@ -61,4 +62,21 @@ bool set_timer1_target(unsigned long ticks)
     OCR1C = ticks >> prescaler_shift;
     OCR1A = OCR1C;
     return true;
+}
+
+void set_timer1_mode(TIMER_MODE mode)
+{
+    switch (mode) {
+        case TIMER_MODE_NOMATCH:
+            // Disable CTC mode
+            cbi(TCCR1, CTC1);
+            break;
+        case TIMER_MODE_INTERRUPT:
+            // Enable CTC mode
+            sbi(TCCR1, CTC1);
+            // Enable interrupt on compare match on OCR1A.
+            sbi(TIMSK, OCIE1A);
+            break;
+    }
+    TCNT1 = 0;
 }
