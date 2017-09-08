@@ -32,3 +32,15 @@ bool timer1_interrupt_check()
     SIM_UNLOCKGIL;
     return result;
 }
+
+void sim_stop()
+{
+    PyObject *pModule, *pResult;
+
+    SIM_LOCKGIL;
+    pModule = PyImport_AddModule("__main__");
+    pResult = PyObject_CallMethod(pModule, "stop", "");
+    SIM_ERRCHECK(pResult);
+    Py_DECREF(pResult);
+    SIM_UNLOCKGIL;
+}
