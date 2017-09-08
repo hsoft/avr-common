@@ -80,3 +80,17 @@ void set_timer1_mode(TIMER_MODE mode)
     }
     TCNT1 = 0;
 }
+
+unsigned long get_timer1_rescaled_tcnt()
+{
+    unsigned char prescaler_shift;
+
+    prescaler_shift = (TCCR1 & 0b11110000) - 1;
+    return TCNT1 << prescaler_shift;
+}
+
+unsigned long ticks_to_msecs(unsigned long ticks)
+{
+    // If we have F_CPU/1000 ticks per msecs, we can divide ticks by (F_CPU/1000) to get msecs
+    return ticks / (F_CPU / 1000);
+}
