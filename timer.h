@@ -8,6 +8,7 @@ typedef enum {
 } TIMER_MODE;
 
 bool set_timer0_target(unsigned long ticks);
+void set_timer0_mode(TIMER_MODE mode);
 bool set_timer1_target(unsigned long ticks);
 void set_timer1_mode(TIMER_MODE mode);
 unsigned long get_timer1_rescaled_tcnt();

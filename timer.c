@@ -32,6 +32,23 @@ bool set_timer0_target(unsigned long ticks)
     return true;
 }
 
+void set_timer0_mode(TIMER_MODE mode)
+{
+    switch (mode) {
+        case TIMER_MODE_NOMATCH:
+            // Disable CTC mode
+            cbi(TCCR0A, WGM01);
+            break;
+        case TIMER_MODE_INTERRUPT:
+            // Enable CTC mode
+            sbi(TCCR0A, WGM01);
+            // Enable interrupt on compare match on OCR0A.
+            sbi(TIMSK, OCIE0A);
+            break;
+    }
+    TCNT0 = 0;
+}
+
 bool set_timer1_target(unsigned long ticks)
 {
     unsigned char prescaler_shift;

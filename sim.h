@@ -9,5 +9,6 @@
 
 void _delay_us(unsigned int usecs);
 void _delay_ms(unsigned int msecs);
+bool timer0_interrupt_check();
 bool timer1_interrupt_check();
 void sim_stop();
