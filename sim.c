@@ -18,14 +18,14 @@ void _delay_ms(unsigned int msecs)
     _delay_us(msecs * 1000);
 }
 
-bool timer0_interrupt_check()
+bool interrupt_check(const char *funcname)
 {
     PyObject *pModule, *pResult;
     long result;
 
     SIM_LOCKGIL;
     pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "timer0_interrupt_check", "");
+    pResult = PyObject_CallMethod(pModule, funcname, "");
     SIM_ERRCHECK(pResult);
     result = PyLong_AsLong(pResult);
     Py_DECREF(pResult);
@@ -33,19 +33,24 @@ bool timer0_interrupt_check()
     return result;
 }
 
+bool int0_interrupt_check()
+{
+    return interrupt_check("int0_interrupt_check");
+}
+
+bool int1_interrupt_check()
+{
+    return interrupt_check("int1_interrupt_check");
+}
+
+bool timer0_interrupt_check()
+{
+    return interrupt_check("timer0_interrupt_check");
+}
+
 bool timer1_interrupt_check()
 {
-    PyObject *pModule, *pResult;
-    long result;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "timer1_interrupt_check", "");
-    SIM_ERRCHECK(pResult);
-    result = PyLong_AsLong(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
-    return result;
+    return interrupt_check("timer1_interrupt_check");
 }
 
 void sim_stop()
