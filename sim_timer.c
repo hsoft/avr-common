@@ -1,70 +1,29 @@
-#include <Python.h>
 #include "timer.h"
 #include "sim.h"
+#include "icemu/capi/icemu.h"
+#include "icemu/capi/avr/attiny.h"
 
-bool set_timer0_target(unsigned long ticks)
+bool set_timer0_target(unsigned long usecs)
 {
-    PyObject *pModule, *pResult;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "set_timer0_target", "l", ticks);
-    SIM_ERRCHECK(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
-    return true;
+    return icemu_start_timer(ICEMU_TIMER0, usecs);
 }
 
 void set_timer0_mode(TIMER_MODE mode)
 {
-    PyObject *pModule, *pResult;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "set_timer0_mode", "b", mode);
-    SIM_ERRCHECK(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
 }
 
-bool set_timer1_target(unsigned long ticks)
+bool set_timer1_target(unsigned long usecs)
 {
-    PyObject *pModule, *pResult;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "set_timer1_target", "l", ticks);
-    SIM_ERRCHECK(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
-    return true;
+    return icemu_start_timer(ICEMU_TIMER1, usecs);
 }
 
 void set_timer1_mode(TIMER_MODE mode)
 {
-    PyObject *pModule, *pResult;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "set_timer1_mode", "b", mode);
-    SIM_ERRCHECK(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
 }
 
 unsigned long get_timer1_rescaled_tcnt()
 {
-    PyObject *pModule, *pResult;
-    long result;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "get_timer1_ticks", "");
-    SIM_ERRCHECK(pResult);
-    result = PyLong_AsLong(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
-    return result;
+    return 0;
 }
 
 unsigned long ticks_to_msecs(unsigned long ticks)

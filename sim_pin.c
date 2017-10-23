@@ -1,6 +1,6 @@
-#include <Python.h>
 #include "pin.h"
 #include "sim.h"
+#include "icemu/capi/icemu.h"
 
 void pinhigh(Pin pin)
 {
@@ -14,14 +14,7 @@ void pinlow(Pin pin)
 
 void pinset(Pin pin, bool high)
 {
-    PyObject *pModule, *pResult;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "pinset", "bb", pin, high);
-    SIM_ERRCHECK(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
+    icemu_pinset(pin & 0x7, high);
 }
 
 void pintoggle(Pin pin)
@@ -31,24 +24,16 @@ void pintoggle(Pin pin)
 
 bool pinishigh(Pin pin)
 {
-    PyObject *pModule, *pResult;
-    long result;
-
-    SIM_LOCKGIL;
-    pModule = PyImport_AddModule("__main__");
-    pResult = PyObject_CallMethod(pModule, "pinishigh", "b", pin);
-    SIM_ERRCHECK(pResult);
-    result = PyLong_AsLong(pResult);
-    Py_DECREF(pResult);
-    SIM_UNLOCKGIL;
-    return result;
+    return icemu_pinread(pin & 0x7);
 }
 
 void pininputmode(Pin pin)
 {
+    icemu_pinsetmode(pin & 0x7, false);
 }
 
 void pinoutputmode(Pin pin)
 {
+    icemu_pinsetmode(pin & 0x7, true);
 }
 
