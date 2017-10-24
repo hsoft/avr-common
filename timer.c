@@ -2,20 +2,37 @@
 #include "timer.h"
 #include "util.h"
 
-// "ticks" is the number of clock cycles we want our timer to last
-// Returns whether we could find a suitable Target (whether "ticks" fits in the timer)
-bool set_timer0_target(unsigned long ticks)
+#define USECS_PER_SECOND 1000000UL
+
+static unsigned long usecs_to_ticks(unsigned long usecs)
+{
+    unsigned long r;
+    if (F_CPU >= USECS_PER_SECOND) {
+        r = (F_CPU / USECS_PER_SECOND) * usecs;
+    } else {
+        r = (F_CPU * usecs) / USECS_PER_SECOND;
+        if (r == 0) {
+            r = 1;
+        }
+    }
+    return r;
+}
+
+bool set_timer0_target(unsigned long usecs)
 {
     unsigned char prescaler_shifts[5] = {0, 3, 6, 8, 10};
     unsigned char prescaler_bits[5] = {0b001, 0b010, 0b011, 0b100, 0b101};
     unsigned char prescaler_index;
+    unsigned long ticks;
 
-    if (ticks == 0) {
+    if (usecs == 0) {
         // Stop the timer.
         TCCR0B &= 0b11111000;
         OCR0A = 0;
         return true;
     }
+
+    ticks = usecs_to_ticks(usecs);
 
     for (prescaler_index=0; prescaler_index<=5; prescaler_index++) {
         if (ticks >> prescaler_shifts[prescaler_index] <= 0xff) {
@@ -49,16 +66,19 @@ void set_timer0_mode(TIMER_MODE mode)
     TCNT0 = 0;
 }
 
-bool set_timer1_target(unsigned long ticks)
+bool set_timer1_target(unsigned long usecs)
 {
     unsigned char prescaler_shift;
+    unsigned long ticks;
 
-    if (ticks == 0) {
+    if (usecs == 0) {
         // Stop the timer.
         TCCR1 &= 0b11110000;
         OCR1C = 0;
         return true;
     }
+
+    ticks = usecs_to_ticks(usecs);
 
     // Timer1 has a prescaler for every possible shift situation, from 0 to 14. No need
     // for a prescaler_shifts table! It also happens that these prescaler ids are sequential. We
