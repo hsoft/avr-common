@@ -1,7 +1,7 @@
 #include "pin.h"
 #include "util.h"
 
-void pinhigh(Pin pin)
+void pinhigh(PinID pin)
 {
     switch ((pin >> 3) & 0b11) {
         case 0b01:
@@ -20,7 +20,7 @@ void pinhigh(Pin pin)
     }
 }
 
-void pinlow(Pin pin)
+void pinlow(PinID pin)
 {
     switch ((pin >> 3) & 0b11) {
         case 0b01:
@@ -39,7 +39,7 @@ void pinlow(Pin pin)
     }
 }
 
-void pinset(Pin pin, bool high)
+void pinset(PinID pin, bool high)
 {
     if (high) {
         pinhigh(pin);
@@ -48,7 +48,7 @@ void pinset(Pin pin, bool high)
     }
 }
 
-void pintoggle(Pin pin)
+void pintoggle(PinID pin)
 {
     switch ((pin >> 3) & 0b11) {
         case 0b01:
@@ -67,7 +67,7 @@ void pintoggle(Pin pin)
     }
 }
 
-bool pinishigh(Pin pin)
+bool pinishigh(PinID pin)
 {
     unsigned char portval = 0;
     switch ((pin >> 3) & 0b11) {
@@ -88,7 +88,7 @@ bool pinishigh(Pin pin)
     return (portval & (1 << (pin & 0b111))) != 0;
 }
 
-void pininputmode(Pin pin)
+void pininputmode(PinID pin)
 {
     switch ((pin >> 3) & 0b11) {
         case 0b01:
@@ -107,7 +107,7 @@ void pininputmode(Pin pin)
     }
 }
 
-void pinoutputmode(Pin pin)
+void pinoutputmode(PinID pin)
 {
     switch ((pin >> 3) & 0b11) {
         case 0b01:

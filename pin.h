@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
-/* Pin structure is 3 bits for the pin number and 2 bits for the port number */
+/* PinID structure is 3 bits for the pin number and 2 bits for the port number */
 
 typedef enum {
     PinB0 = 0b01000,
@@ -32,12 +32,12 @@ typedef enum {
     PinD6 = 0b11110,
     PinD7 = 0b11111,
 #endif
-} Pin;
+} PinID;
 
-void pinhigh(Pin pin);
-void pinlow(Pin pin);
-void pinset(Pin pin, bool high);
-void pintoggle(Pin pin);
-bool pinishigh(Pin pin);
-void pininputmode(Pin pin);
-void pinoutputmode(Pin pin);
+void pinhigh(PinID pin);
+void pinlow(PinID pin);
+void pinset(PinID pin, bool high);
+void pintoggle(PinID pin);
+bool pinishigh(PinID pin);
+void pininputmode(PinID pin);
+void pinoutputmode(PinID pin);
