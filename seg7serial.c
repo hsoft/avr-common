@@ -10,13 +10,7 @@ static void clock(bool high)
 {
     pinlow(CLK);
     pinset(SER, high);
-    /* After a little trial-and-error, this is the lowest delay I found with
-     * which I wouldn't get occasional erroring out on the other end. I find it
-     * a bit high (after all, the the same MCU on the other side, so the same
-     * speed). This indicates that the processing of input is more costly than
-     * I thought. Interesting...
-     */
-    _delay_us(300);
+    _delay_us(50);
     pinhigh(CLK);
 }
 
@@ -25,11 +19,11 @@ static void digit(uint8_t digit)
     if (digit >= 10) {
         return;
     }
-    clock(digit & 1);
-    clock(digit & (1 << 1));
-    clock(digit & (1 << 2));
-    clock(digit & (1 << 3));
     clock(false); // no dot
+    clock(digit & (1 << 3));
+    clock(digit & (1 << 2));
+    clock(digit & (1 << 1));
+    clock(digit & 1);
 }
 
 void seg7serial_setpins(PinID clk, PinID ser)
@@ -58,6 +52,7 @@ void seg7serial_send(uint16_t val)
 
     // Empty CLK to begin
     clock(false);
+    _delay_us(200);
     for (int i=0; i < SEG7SERIAL_DIGITS; i++) {
         digit(digits[i]);
     }
