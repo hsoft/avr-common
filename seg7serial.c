@@ -56,9 +56,9 @@ void seg7serial_send(uint16_t val)
     for (int i=0; i < SEG7SERIAL_DIGITS; i++) {
         digit(digits[i]);
     }
-    clock(verif & 1);
-    clock(verif & (1 << 1));
-    clock(verif & (1 << 2));
-    clock(verif & (1 << 3));
     clock(verif & (1 << 4));
+    clock(verif & (1 << 3));
+    clock(verif & (1 << 2));
+    clock(verif & (1 << 1));
+    clock(verif & 1);
 }
